@@ -4,9 +4,10 @@ services:
   # --------------------------------------------------
   - type: web
     name: jarvis-backend-service
-    runtime: docker
+    env: docker
     plan: free
     region: singapore
+    dockerContext: ./backend
     dockerfilePath: ./backend/Dockerfile
     healthCheckPath: /health
     envVars:
@@ -28,11 +29,11 @@ services:
   # --------------------------------------------------
   # Frontend Static Site (Vanilla JS Glassmorphism SPA)
   # --------------------------------------------------
-  - type: static
+  - type: web
     name: jarvis-frontend-app
+    env: static
     plan: free
-    buildCommand: ""
-    publishDir: ./frontend
+    staticPublishPath: ./frontend
     routes:
       - type: rewrite
         source: /*
