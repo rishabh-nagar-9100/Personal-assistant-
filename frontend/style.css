@@ -1861,24 +1861,199 @@ body.sidebar-collapsed .main-wrapper {
 }
 
 /* ═══════════════════════════════════════════
-   Responsive
+   Comprehensive Mobile & Tablet Responsiveness
    ═══════════════════════════════════════════ */
+
+/* Mobile Sidebar Backdrop Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+body.sidebar-open .sidebar-overlay {
+  display: block;
+  opacity: 1;
+}
+
 @media (max-width: 1200px) {
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
   .two-col-layout { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 992px) {
-  .sidebar-nav { transform: translateX(-100%); }
-  body.sidebar-open .sidebar-nav { transform: translateX(0); }
-  .main-wrapper { margin-left: 0; }
-  .sidebar-toggle { display: flex; }
-  .dashboard-grid { grid-template-columns: 1fr; }
-  .bottom-row { grid-template-columns: 1fr; }
+  body {
+    overflow-x: hidden;
+  }
+  .sidebar-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+  }
+  body.sidebar-open .sidebar-nav {
+    transform: translateX(0);
+  }
+  .main-wrapper {
+    margin-left: 0;
+    padding: 16px;
+    width: 100%;
+  }
+  .sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .bottom-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
-@media (max-width: 640px) {
-  .kpi-row { grid-template-columns: 1fr; }
-  .top-header { flex-direction: column; gap: 12px; align-items: flex-start; }
-  .header-actions { flex-wrap: wrap; }
+@media (max-width: 768px) {
+  .top-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 14px;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .greeting h1 {
+    font-size: 1.2rem;
+  }
+  .greeting p {
+    font-size: 0.8rem;
+  }
+  .header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .header-actions > * {
+    font-size: 0.8rem;
+  }
+  .dayorder-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px;
+  }
+  .dayorder-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+  }
+  .dayorder-btn {
+    flex: 1 1 calc(33.33% - 6px);
+    min-width: 70px;
+    text-align: center;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+  
+  /* Horizontal swipeable prompt chips on mobile */
+  .chat-chips {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 8px;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .chat-chips::-webkit-scrollbar {
+    display: none;
+  }
+  .chip {
+    flex: 0 0 auto;
+    font-size: 0.78rem;
+    padding: 6px 12px;
+  }
+  
+  /* Horizontal swipeable subject tabs on mobile */
+  .subject-tabs-header {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 8px;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .subject-tabs-header::-webkit-scrollbar {
+    display: none;
+  }
+  .subject-tab {
+    flex: 0 0 auto;
+  }
+
+  /* Modals & Card responsiveness */
+  .modal-container, .modal-content {
+    width: 94vw !important;
+    max-width: 94vw !important;
+    margin: 10px auto;
+    padding: 16px;
+  }
+  
+  .question-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .question-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .kpi-card {
+    padding: 14px;
+  }
+  .kpi-val {
+    font-size: 1.4rem;
+  }
+  .dayorder-btn {
+    flex: 1 1 calc(50% - 6px);
+  }
+  .chat-container {
+    height: 400px;
+  }
 }

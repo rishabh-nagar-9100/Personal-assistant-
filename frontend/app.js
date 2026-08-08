@@ -70,6 +70,7 @@ function toggleSidebar() {
 }
 
 function switchSection(sectionId, element) {
+  document.body.classList.remove('sidebar-open');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   if (element) element.classList.add('active');
   
