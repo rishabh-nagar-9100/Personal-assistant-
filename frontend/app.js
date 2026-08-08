@@ -3,7 +3,9 @@
    ═══════════════════════════════════════════ */
 
 const DEFAULT_TEST_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTExMTExMS0xMTExLTExMTEtMTExMS0xMTExMTExMTExMTEiLCJlbWFpbCI6InJpc2hhYmhAZXhhbXBsZS5jb20iLCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImlhdCI6MTc4NjE2MzE5MiwiZXhwIjoxODE3Njk5MTkyfQ.9QqZQAZHpR_B7LY7bdkIkgIp7iXDuXBiYQo8RSUaUHg';
-const API_BASE = 'http://localhost:8080';
+const RENDER_BACKEND_URL = 'https://jarvis-backend-service.onrender.com';
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE = isLocalhost ? 'http://localhost:8080' : (window.JARVIS_BACKEND_URL || RENDER_BACKEND_URL);
 const API_BASE_URL = API_BASE;
 
 let authToken = localStorage.getItem('jarvis_jwt') || DEFAULT_TEST_TOKEN;

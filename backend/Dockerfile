@@ -1,14 +1,19 @@
-# Stage 1: Build
-FROM maven:3.9-eclipse-temurin-21 AS build
+# Build Stage
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn package -DskipTests -B
 
-# Stage 2: Run
-FROM eclipse-temurin:21-jre
+# Runtime Stage
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Memory optimized for Render Free Tier (512MB RAM cap)
+ENV JAVA_OPTS="-Xmx384m -Xms128m -XX:+UseG1GC"
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
