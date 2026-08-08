@@ -1939,50 +1939,58 @@ body.sidebar-open .sidebar-overlay {
   .top-header {
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-    padding: 14px;
-    border-radius: 14px;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
   }
   .header-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
+    width: 100%;
   }
   .greeting h1 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
+    line-height: 1.3;
   }
   .greeting p {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
   .header-actions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
   }
   .header-actions > * {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    padding: 6px 10px;
   }
   .dayorder-card {
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
-    padding: 14px;
+    padding: 12px;
   }
   .dayorder-pills {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 6px;
     width: 100%;
   }
   .dayorder-btn {
     width: 100%;
     text-align: center;
-    padding: 6px 4px;
-    font-size: 0.75rem;
+    padding: 8px 6px;
+    font-size: 0.78rem;
     white-space: nowrap;
     justify-content: center;
+  }
+  .dayorder-btn-free {
+    grid-column: span 2;
   }
   
   /* Horizontal swipeable prompt chips on mobile */
@@ -2046,7 +2054,7 @@ body.sidebar-open .sidebar-overlay {
    ═══════════════════════════════════════════ */
 @media (max-width: 430px) {
   .main-wrapper {
-    padding: 12px 10px max(20px, env(safe-area-inset-bottom)) 10px;
+    padding: 10px 8px max(20px, env(safe-area-inset-bottom)) 8px;
   }
 
   /* KPI Metrics 2x2 Grid on iPhone 12 */
@@ -2056,29 +2064,32 @@ body.sidebar-open .sidebar-overlay {
     gap: 8px;
   }
   .kpi-card {
-    padding: 10px 12px;
+    padding: 10px;
     gap: 6px;
   }
   .kpi-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 0.85rem;
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
   }
   .kpi-value {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
   .kpi-label {
     font-size: 0.68rem;
   }
 
-  /* Day Order Pills 3x2 Grid */
+  /* Day Order Pills 2x3 Grid on iPhone 12 */
   .dayorder-pills {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 6px;
   }
   .dayorder-btn {
-    padding: 6px 4px;
-    font-size: 0.7rem;
+    padding: 7px 4px;
+    font-size: 0.72rem;
+  }
+  .dayorder-btn-free {
+    grid-column: span 2;
   }
 
   /* Schedule timeline item alignment */
@@ -2091,6 +2102,12 @@ body.sidebar-open .sidebar-overlay {
   }
   .schedule-title {
     font-size: 0.85rem;
+  }
+
+  /* Executive AI Briefing and AI Assistant on Mobile */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px;
   }
 
   /* AI Chat Box */
