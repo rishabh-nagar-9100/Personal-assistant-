@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JARVIS AI — Personal Study & Executive Assistant</title>
+  <meta name="description"
+    content="JARVIS AI-powered personal study assistant with intelligent scheduling, spaced repetition, and conversational AI coaching.">
+  <link rel="stylesheet" href="style.css?v=2.1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Left Sidebar Navigation -->
+  <nav class="sidebar-nav" id="sidebarNav">
+    <div class="sidebar-brand">
+      <div class="brand-logo">
+        <i class="fa-solid fa-bolt"></i>
+      </div>
+      <span class="brand-text">JARVIS</span>
+    </div>
+
+    <div class="nav-links">
+      <a class="nav-item active" data-section="dashboard" onclick="switchSection('dashboard', this)">
+        <i class="fa-solid fa-gauge-high"></i>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" data-section="schedule" onclick="switchSection('schedule', this)">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>Live Schedule</span>
+      </a>
+      <a class="nav-item" data-section="studyplan" onclick="switchSection('studyplan', this)">
+        <i class="fa-solid fa-book-open"></i>
+        <span>Study Plan</span>
+      </a>
+      <a class="nav-item" data-section="topics" onclick="switchSection('topics', this)">
+        <i class="fa-solid fa-brain"></i>
+        <span>Topics Tracker</span>
+      </a>
+      <a class="nav-item" data-section="tasks" onclick="switchSection('tasks', this)">
+        <i class="fa-solid fa-list-check"></i>
+        <span>Tasks</span>
+      </a>
+      <a class="nav-item" data-section="analytics" onclick="switchSection('analytics', this)">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Analytics</span>
+      </a>
+    </div>
+
+    <!-- User Profile -->
+    <div class="sidebar-user">
+      <div class="user-avatar">R</div>
+      <div class="user-info">
+        <div class="user-name">Rishabh</div>
+        <div class="user-email">rishabh.nagar@gmail.com</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <div class="main-wrapper">
+
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="greeting">
+          <h1 id="greetingText">Good morning, Rishabh! 👋</h1>
+          <p class="greeting-date" id="greetingDate"></p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="live-clock-badge">
+          <i class="fa-solid fa-clock" style="color: #38BDF8;"></i>
+          <span id="headerClock">12:00:00 PM</span>
+        </div>
+        <div class="status-badge" id="backendStatus">
+          <div class="status-dot"></div>
+          <span>Spring Boot Live</span>
+        </div>
+        <label class="btn btn-glass btn-sm" style="cursor: pointer;">
+          <i class="fa-solid fa-file-arrow-up"></i> Upload Document (.xlsx, .pdf)
+          <input type="file" id="excelFileInput" accept=".xlsx, .xls, .pdf" style="display: none;"
+            onchange="handleExcelUpload(event)">
+        </label>
+        <div class="focus-toggle" id="focusModeToggle" onclick="toggleFocusMode()">
+          <i class="fa-solid fa-crosshairs"></i>
+          <span>Focus Mode</span>
+          <div class="toggle-switch">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION 1: DASHBOARD VIEW -->
+    <div id="view-dashboard" class="section-view active">
+      
+      <!-- College Day Order Timetable Banner -->
+      <div class="dayorder-card" id="dayOrderBanner">
+        <div class="dayorder-left">
+          <div class="dayorder-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <div>
+            <div class="dayorder-title">
+              College Timetable: Which Day Order is running today?
+              <span class="badge badge-cached" id="activeDayOrderBadge">DAY 1</span>
+            </div>
+            <div class="dayorder-desc" id="dayOrderSummaryText">
+              Select today's order to remove college class hours and calculate your optimal study blocks.
+            </div>
+          </div>
+        </div>
+        <div class="dayorder-pills" id="dayOrderPills">
+          <button class="dayorder-btn" id="btnDay1" onclick="selectDayOrder('DAY_1')"><i class="fa-solid fa-calendar-day"></i> Day 1</button>
+          <button class="dayorder-btn" id="btnDay2" onclick="selectDayOrder('DAY_2')"><i class="fa-solid fa-calendar-day"></i> Day 2</button>
+          <button class="dayorder-btn" id="btnDay3" onclick="selectDayOrder('DAY_3')"><i class="fa-solid fa-calendar-day"></i> Day 3</button>
+          <button class="dayorder-btn" id="btnDay4" onclick="selectDayOrder('DAY_4')"><i class="fa-solid fa-calendar-day"></i> Day 4</button>
+          <button class="dayorder-btn" id="btnDay5" onclick="selectDayOrder('DAY_5')"><i class="fa-solid fa-calendar-day"></i> Day 5</button>
+          <button class="dayorder-btn dayorder-btn-free" id="btnHoliday" onclick="selectDayOrder('HOLIDAY')"><i class="fa-solid fa-mug-hot"></i> Holiday / Weekend</button>
+        </div>
+      </div>
+
+      <!-- KPI Metrics Row -->
+      <section class="kpi-row" id="kpiRow">
+        <div class="kpi-card kpi-study">
+          <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="kpi-data">
+            <div class="kpi-value" id="kpiStudyTime">0h</div>
+            <div class="kpi-label">Study Time</div>
+          </div>
+          <div class="kpi-trend kpi-up"><i class="fa-solid fa-arrow-trend-up"></i></div>
+        </div>
+        <div class="kpi-card kpi-topics">
+          <div class="kpi-icon"><i class="fa-solid fa-book"></i></div>
+          <div class="kpi-data">
+            <div class="kpi-value" id="kpiTopicsStudied">0</div>
+            <div class="kpi-label">Topics Studied</div>
+          </div>
+          <div class="kpi-trend kpi-up"><i class="fa-solid fa-arrow-trend-up"></i></div>
+        </div>
+        <div class="kpi-card kpi-tasks">
+          <div class="kpi-icon"><i class="fa-solid fa-check-double"></i></div>
+          <div class="kpi-data">
+            <div class="kpi-value" id="kpiTasksCompleted">0/0</div>
+            <div class="kpi-label">Tasks Completed</div>
+          </div>
+          <div class="kpi-trend kpi-neutral"><i class="fa-solid fa-minus"></i></div>
+        </div>
+        <div class="kpi-card kpi-revision">
+          <div class="kpi-icon"><i class="fa-solid fa-brain"></i></div>
+          <div class="kpi-data">
+            <div class="kpi-value" id="kpiRevisionQueue">0</div>
+            <div class="kpi-label">Due for Revision</div>
+          </div>
+          <div class="kpi-trend kpi-down"><i class="fa-solid fa-arrow-trend-down"></i></div>
+        </div>
+      </section>
+
+      <!-- Dashboard Content Grid: Executive AI Briefing & AI Assistant Panel -->
+      <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
+        <!-- LEFT: Executive AI Briefing -->
+        <section class="glass-card briefing-card">
+          <div class="card-header">
+            <h2 class="card-title">
+              <i class="fa-solid fa-wand-magic-sparkles" style="color: #38BDF8;"></i>
+              Executive AI Briefing
+            </h2>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="badge badge-cached" id="briefingCacheBadge">Cached (1/Day)</span>
+              <button class="btn btn-glass btn-sm" onclick="regenerateBriefing()">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </button>
+            </div>
+          </div>
+          <div class="briefing-box" id="briefingContent">
+            Loading today's AI briefing...
+          </div>
+        </section>
+
+        <!-- RIGHT: AI Assistant Panel -->
+        <section class="glass-card chat-card" id="chatPanel">
+          <div class="card-header">
+            <h2 class="card-title">
+              <i class="fa-solid fa-robot" style="color: #7C3AED;"></i>
+              AI Assistant
+            </h2>
+            <div class="chat-status">
+              <div class="status-dot status-dot-purple"></div>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Online</span>
+            </div>
+          </div>
+
+          <!-- Chat Messages Area -->
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-bubble assistant">
+              <div class="bubble-avatar"><i class="fa-solid fa-robot"></i></div>
+              <div class="bubble-content">
+                <p>Hey Rishabh! 👋 I'm JARVIS, your AI study assistant. Ask me anything about your schedule, progress,
+                  or what to study next!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Prompt Chips -->
+          <div class="chat-chips">
+            <button class="chip" onclick="sendQuickPrompt('What should I study right now?')">
+              <i class="fa-solid fa-lightbulb"></i> What to study?
+            </button>
+            <button class="chip" onclick="sendQuickPrompt('Show me my schedule for today')">
+              <i class="fa-solid fa-calendar"></i> My schedule
+            </button>
+            <button class="chip" onclick="sendQuickPrompt('What college classes do I have today?')">
+              <i class="fa-solid fa-graduation-cap"></i> College classes
+            </button>
+            <button class="chip" onclick="sendQuickPrompt('Which topics need revision the most?')">
+              <i class="fa-solid fa-brain"></i> Weak topics
+            </button>
+            <button class="chip" onclick="sendQuickPrompt('How much DSA and SQL is left for today?')">
+              <i class="fa-solid fa-chart-line"></i> Practice quotas
+            </button>
+            <button class="chip" onclick="sendQuickPrompt('Summarize my progress across all subjects')">
+              <i class="fa-solid fa-cubes"></i> Subject breakdown
+            </button>
+            <button class="chip" onclick="sendQuickPrompt('What are my pending tasks and deadlines?')">
+              <i class="fa-solid fa-list-check"></i> Pending tasks
+            </button>
+            <button class="chip" onclick="sendQuickPrompt('I have an upcoming placement exam, help me prioritize')">
+              <i class="fa-solid fa-bullseye"></i> Exam prep
+            </button>
+          </div>
+
+          <!-- Chat Input -->
+          <div class="chat-input-container">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ask JARVIS anything..."
+              onkeydown="if(event.key==='Enter')sendChatMessage()">
+            <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- SECTION 2: LIVE SCHEDULE VIEW -->
+    <div id="view-schedule" class="section-view hidden">
+      <div class="section-header">
+        <div>
+          <h2><i class="fa-solid fa-calendar-days" style="color: #818CF8;"></i> Schedule & Timetable Manager</h2>
+          <p class="section-desc">Manage college class slots, fixed commitments, and compute optimal study blocks.</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-primary" onclick="openModal('timetableModal')">
+            <i class="fa-solid fa-plus"></i> Add Timetable Slot
+          </button>
+        </div>
+      </div>
+
+      <!-- College Day Order Timetable Quick Switcher -->
+      <div class="dayorder-card" style="margin-bottom: 20px;">
+        <div class="dayorder-left">
+          <div class="dayorder-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <div>
+            <div class="dayorder-title">
+              Active College Day Order
+            </div>
+            <div class="dayorder-desc">
+              Select today's day order to automatically remove college class hours and calculate free study blocks.
+            </div>
+          </div>
+        </div>
+        <div class="dayorder-pills">
+          <button class="dayorder-btn" onclick="selectDayOrder('DAY_1')"><i class="fa-solid fa-calendar-day"></i> Day 1</button>
+          <button class="dayorder-btn" onclick="selectDayOrder('DAY_2')"><i class="fa-solid fa-calendar-day"></i> Day 2</button>
+          <button class="dayorder-btn" onclick="selectDayOrder('DAY_3')"><i class="fa-solid fa-calendar-day"></i> Day 3</button>
+          <button class="dayorder-btn" onclick="selectDayOrder('DAY_4')"><i class="fa-solid fa-calendar-day"></i> Day 4</button>
+          <button class="dayorder-btn" onclick="selectDayOrder('DAY_5')"><i class="fa-solid fa-calendar-day"></i> Day 5</button>
+          <button class="dayorder-btn dayorder-btn-free" onclick="selectDayOrder('HOLIDAY')"><i class="fa-solid fa-mug-hot"></i> Holiday / Weekend</button>
+        </div>
+      </div>
+
+      <!-- Hero Banner: Current Active Focus NOW -->
+      <div class="current-focus-card" id="currentFocusBanner">
+        <div>
+          <span class="slot-badge-now"><i class="fa-solid fa-fire"></i> CURRENT FOCUS NOW</span>
+          <div class="focus-banner-title" id="focusCurrentTitle">Checking live schedule...</div>
+          <div class="focus-banner-sub" id="focusCurrentSub">Comparing system clock with your time blocks.</div>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button class="btn btn-primary btn-sm" onclick="loadScheduleView()">
+            <i class="fa-solid fa-rotate"></i> Refresh Live Status
+          </button>
+        </div>
+      </div>
+
+      <div class="two-col-layout">
+        <!-- Date-Blocked Generator -->
+        <section class="glass-card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-calendar-day" style="color: #38BDF8;"></i> Daily Time-Blocked
+              Schedule</h3>
+            <input type="date" id="scheduleDatePicker" class="form-input" style="width: auto; padding: 6px 12px;"
+              onchange="loadScheduleForDate(this.value)">
+          </div>
+          <div class="timeline-container" id="fullScheduleTimeline">
+            <div class="timeline-placeholder">Select a date or load today's schedule</div>
+          </div>
+        </section>
+
+        <!-- Timetable Slot List -->
+        <section class="glass-card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-table-list" style="color: #10B981;"></i> Weekly Timetable Slots
+            </h3>
+            <span class="badge badge-date" id="slotCountBadge">0 Slots</span>
+          </div>
+          <div id="timetableSlotList" class="scroll-list">
+            <div class="timeline-placeholder">Loading timetable slots...</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- SECTION 3: STUDY PLAN VIEW -->
+    <div id="view-studyplan" class="section-view hidden">
+      <div class="section-header">
+        <div>
+          <h2><i class="fa-solid fa-book-open" style="color: #10B981;"></i> Study Plan & Subject Questions Tracker</h2>
+          <p class="section-desc">Manage subjects and track practice questions via 7-column Excel spreadsheets (.xlsx,
+            .xls).</p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="openModal('createSubjectModal')">
+            <i class="fa-solid fa-folder-plus"></i> + Add New Subject
+          </button>
+          <button class="btn btn-glass" onclick="openSubjectExcelModal()">
+            <i class="fa-solid fa-file-excel"></i> Upload 7-Col Excel
+          </button>
+          <button class="btn btn-glass" onclick="openModal('quotaModal')">
+            <i class="fa-solid fa-sliders"></i> Daily Targets
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="clearAllPreviousData()" style="padding: 8px 14px;"
+            title="Wipe previous questions and subjects to start fresh">
+            <i class="fa-solid fa-trash-can"></i> Clear All Data
+          </button>
+        </div>
+      </div>
+
+      <!-- Subject Tabs / Selector Bar -->
+      <div class="subject-tabs-container">
+        <div class="subject-tabs-scroll" id="subjectTabsRow">
+          <!-- Dynamically populated subject tabs -->
+          <div class="subject-tab active" onclick="selectStudyPlanSubject('ALL', this)">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>All Questions</span>
+            <span class="tab-badge" id="tabAllBadge">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Subject Overview Card -->
+      <div class="subject-hero-card" id="subjectHeroCard">
+        <div class="subject-hero-left">
+          <div class="subject-icon-box">
+            <i class="fa-solid fa-book-bookmark"></i>
+          </div>
+          <div class="subject-hero-details">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <h3 class="subject-hero-title" id="subjectHeroTitle">All Subjects</h3>
+              <span class="badge badge-date" id="subjectHeroTopicCount">0 Topics</span>
+            </div>
+            <div class="subject-hero-stats" id="subjectHeroStats">
+              <span class="stat-pill"><i class="fa-solid fa-list-ol"></i> <strong id="statTotal">0</strong> Total</span>
+              <span class="stat-pill stat-solved"><i class="fa-solid fa-circle-check"></i> <strong
+                  id="statSolved">0</strong> Solved</span>
+              <span class="stat-pill stat-progress"><i class="fa-solid fa-spinner"></i> <strong
+                  id="statInProgress">0</strong> In Progress</span>
+              <span class="stat-pill stat-revision"><i class="fa-solid fa-arrows-rotate"></i> <strong
+                  id="statRevision">0</strong> Needs Revision</span>
+              <span class="stat-pill stat-notstarted"><i class="fa-regular fa-circle"></i> <strong
+                  id="statNotStarted">0</strong> Not Started</span>
+            </div>
+            <div class="subject-progress-container">
+              <div class="subject-progress-bar" id="subjectProgressBar" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="subject-hero-actions">
+          <button class="btn btn-primary btn-sm" id="btnUploadForActiveSubject" onclick="openSubjectExcelModal()">
+            <i class="fa-solid fa-file-excel"></i> <span id="heroSubjectUploadText">Upload Excel for this Subject</span>
+          </button>
+          <button class="btn btn-glass btn-sm" onclick="openStudyPlanQuestionModal()">
+            <i class="fa-solid fa-plus"></i> Add Question
+          </button>
+          <button class="btn btn-danger btn-sm" id="btnDeleteCurrentSubject" style="display: none;"
+            onclick="deleteCurrentSubject()">
+            <i class="fa-solid fa-trash"></i> Delete Subject
+          </button>
+        </div>
+      </div>
+
+      <!-- Questions List & Filter Section -->
+      <section class="glass-card" style="margin-top: 20px;">
+        <div class="card-header" style="flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 250px;">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="questionSearchInput" class="search-input"
+                placeholder="Search by title, topic, or #number..." oninput="filterStudyPlanQuestions()">
+            </div>
+          </div>
+          <div class="filter-group">
+            <div class="tab-row" style="margin: 0;">
+              <div class="tab-chip active" onclick="setQuestionStatusFilter('ALL', this)">All Status</div>
+              <div class="tab-chip" onclick="setQuestionStatusFilter('NOT_STARTED', this)">Not Started</div>
+              <div class="tab-chip" onclick="setQuestionStatusFilter('IN_PROGRESS', this)">In Progress</div>
+              <div class="tab-chip" onclick="setQuestionStatusFilter('SOLVED', this)">Solved</div>
+              <div class="tab-chip" onclick="setQuestionStatusFilter('NEEDS_REVISION', this)">Needs Revision</div>
+            </div>
+            <select id="questionDifficultyFilter" class="form-select form-select-sm" style="width: auto;"
+              onchange="filterStudyPlanQuestions()">
+              <option value="ALL">All Difficulties</option>
+              <option value="EASY">Easy</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HARD">Hard</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Questions Table / Card Container -->
+        <div id="studyPlanQuestionsList" class="questions-table-wrapper">
+          <div class="timeline-placeholder">Loading subject questions...</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- SECTION 4: TOPICS TRACKER VIEW -->
+    <div id="view-topics" class="section-view hidden">
+      <div class="section-header">
+        <div>
+          <h2><i class="fa-solid fa-brain" style="color: #EC4899;"></i> Topics Tracker & Spaced Repetition</h2>
+          <p class="section-desc">Organize subjects, track topic mastery, and review items based on SuperMemo-2 (SM-2).
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-glass" onclick="openModal('subjectModal')">
+            <i class="fa-solid fa-folder-plus"></i> Add Subject
+          </button>
+          <button class="btn btn-primary" onclick="openModal('topicModal')">
+            <i class="fa-solid fa-plus"></i> Add Topic
+          </button>
+        </div>
+      </div>
+
+      <div class="two-col-layout">
+        <!-- Subjects & Topics List -->
+        <section class="glass-card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-layer-group" style="color: #A78BFA;"></i> Subjects & Syllabus
+            </h3>
+          </div>
+          <div id="subjectsList" class="scroll-list">
+            <div class="timeline-placeholder">Loading subjects...</div>
+          </div>
+        </section>
+
+        <!-- SM-2 Spaced Repetition Flashcards -->
+        <section class="glass-card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-clock-rotate-left" style="color: #EC4899;"></i> Due Revisions
+              Hub</h3>
+            <span class="badge badge-notif" id="dueRevisionBadge">0 Due</span>
+          </div>
+          <div id="fullRevisionQueue" class="scroll-list">
+            <div class="timeline-placeholder">Loading revision queue...</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- SECTION 5: TASKS & PRIORITY EVENTS VIEW -->
+    <div id="view-tasks" class="section-view hidden">
+      <div class="section-header">
+        <div>
+          <h2><i class="fa-solid fa-list-check" style="color: #F59E0B;"></i> Tasks & Priority Placement Events</h2>
+          <p class="section-desc">Track to-dos and exams/placement tests that reprioritize your automated study engine.
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-glass" onclick="openModal('priorityEventModal')">
+            <i class="fa-solid fa-flag"></i> Add Priority Event
+          </button>
+          <button class="btn btn-primary" onclick="openModal('taskModal')">
+            <i class="fa-solid fa-plus"></i> Add Task
+          </button>
+        </div>
+      </div>
+
+      <div class="two-col-layout">
+        <!-- Tasks Manager -->
+        <section class="glass-card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-check-square" style="color: #38BDF8;"></i> Actionable Tasks
+            </h3>
+            <div class="tab-row" style="margin: 0;">
+              <div class="tab-chip active" onclick="switchTaskFilter('ALL', this)">All</div>
+              <div class="tab-chip" onclick="switchTaskFilter('PENDING', this)">Pending</div>
+              <div class="tab-chip" onclick="switchTaskFilter('DONE', this)">Done</div>
+            </div>
+          </div>
+          <div id="tasksManagerList" class="scroll-list">
+            <div class="timeline-placeholder">Loading tasks...</div>
+          </div>
+        </section>
+
+        <!-- Priority Placement Events -->
+        <section class="glass-card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-star" style="color: #F59E0B;"></i> Priority Placement Events
+            </h3>
+          </div>
+          <div id="priorityEventsList" class="scroll-list">
+            <div class="timeline-placeholder">Loading priority events...</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- SECTION 6: ANALYTICS VIEW -->
+    <div id="view-analytics" class="section-view hidden">
+      <div class="section-header">
+        <div>
+          <h2><i class="fa-solid fa-chart-line" style="color: #38BDF8;"></i> Analytics & Performance Metrics</h2>
+          <p class="section-desc">Overview of total study time, completion trends, and SM-2 retention statistics.</p>
+        </div>
+        <button class="btn btn-glass" onclick="loadAnalyticsView()">
+          <i class="fa-solid fa-rotate"></i> Refresh Metrics
+        </button>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card kpi-study">
+          <div class="kpi-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+          <div class="kpi-data">
+            <div class="kpi-value" id="analyticsTotalTime">0 hours</div>
+            <div class="kpi-label">Scheduled Time Today</div>
+          </div>
+        </div>
+        <div class="kpi-card kpi-topics">
+          <div class="kpi-icon"><i class="fa-solid fa-chart-pie"></i></div>
+          <div class="kpi-data">
+            <div class="kpi-value" id="analyticsQuotaPct">0%</div>
+            <div class="kpi-label">Practice Goal Completion</div>
+          </div>
+        </div>
+        <div class="kpi-card kpi-tasks">
+          <div class="kpi-icon"><i class="fa-solid fa-list-check"></i></div>
+          <div class="kpi-data">
+            <div class="kpi-value" id="analyticsTaskPct">0%</div>
+            <div class="kpi-label">Task Completion Rate</div>
+          </div>
+        </div>
+        <div class="kpi-card kpi-revision">
+          <div class="kpi-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="kpi-data">
+            <div class="kpi-value" id="analyticsRetention">100%</div>
+            <div class="kpi-label">SM-2 Spaced Retention</div>
+          </div>
+        </div>
+      </div>
+
+      <section class="glass-card" style="margin-top: 20px;">
+        <div class="card-header">
+          <h3 class="card-title"><i class="fa-solid fa-chart-simple" style="color: #818CF8;"></i> Performance Breakdown
+          </h3>
+        </div>
+        <div id="analyticsBreakdown" style="padding: 20px 0;">
+          <div class="timeline-placeholder">Loading performance analytics...</div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <!-- Shared UI Modals -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeModalOnBackdrop(event)">
+
+    <!-- Timetable Modal -->
+    <div class="modal-content" id="timetableModal" style="display: none;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-calendar-plus"></i> Add Timetable Slot</h3>
+        <button class="modal-close" onclick="closeModal('timetableModal')">&times;</button>
+      </div>
+      <form onsubmit="handleTimetableSubmit(event)">
+        <div class="form-group">
+          <label>Day of Week</label>
+          <select id="ttDay" class="form-select" required>
+            <option value="MONDAY">Monday</option>
+            <option value="TUESDAY">Tuesday</option>
+            <option value="WEDNESDAY">Wednesday</option>
+            <option value="THURSDAY">Thursday</option>
+            <option value="FRIDAY">Friday</option>
+            <option value="SATURDAY">Saturday</option>
+            <option value="SUNDAY">Sunday</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Start Time</label>
+            <input type="time" id="ttStart" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label>End Time</label>
+            <input type="time" id="ttEnd" class="form-input" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Slot Type</label>
+          <select id="ttType" class="form-select" required>
+            <option value="CLASS">Class / Lecture</option>
+            <option value="FIXED_COMMITMENT">Fixed Commitment</option>
+            <option value="FREE">Free Study Window</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Label / Course Name</label>
+          <input type="text" id="ttLabel" class="form-input" placeholder="e.g. Operating Systems Lecture" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-glass" onclick="closeModal('timetableModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Slot</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Task Modal -->
+    <div class="modal-content" id="taskModal" style="display: none;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-plus"></i> Create Task</h3>
+        <button class="modal-close" onclick="closeModal('taskModal')">&times;</button>
+      </div>
+      <form onsubmit="handleTaskSubmit(event)">
+        <div class="form-group">
+          <label>Task Title</label>
+          <input type="text" id="taskTitle" class="form-input" placeholder="e.g. Complete Assignment 2" required>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="taskDesc" class="form-input" rows="3" placeholder="Optional details..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Due Date</label>
+            <input type="datetime-local" id="taskDueDate" class="form-input">
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <select id="taskPriority" class="form-select" required>
+              <option value="LOW">Low</option>
+              <option value="MEDIUM" selected>Medium</option>
+              <option value="HIGH">High</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-glass" onclick="closeModal('taskModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Task</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Priority Event Modal -->
+    <div class="modal-content" id="priorityEventModal" style="display: none;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-flag"></i> Add Priority Placement / Exam Event</h3>
+        <button class="modal-close" onclick="closeModal('priorityEventModal')">&times;</button>
+      </div>
+      <form onsubmit="handlePriorityEventSubmit(event)">
+        <div class="form-group">
+          <label>Event Name</label>
+          <input type="text" id="eventName" class="form-input" placeholder="e.g. Google Placement Test" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Event Date & Time</label>
+            <input type="datetime-local" id="eventDate" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label>Event Type</label>
+            <select id="eventType" class="form-select" required>
+              <option value="PLACEMENT_TEST">Placement Test</option>
+              <option value="EXAM">Midterm / Endterm Exam</option>
+              <option value="DEADLINE">Major Deadline</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Job Description / Syllabus (Optional)</label>
+          <textarea id="eventJdText" class="form-input" rows="3"
+            placeholder="Paste JD or syllabus text to auto-boost related topics..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-glass" onclick="closeModal('priorityEventModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Event</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Subject Modal -->
+    <div class="modal-content" id="subjectModal" style="display: none;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-folder-plus"></i> Add Subject</h3>
+        <button class="modal-close" onclick="closeModal('subjectModal')">&times;</button>
+      </div>
+      <form onsubmit="handleSubjectSubmit(event)">
+        <div class="form-group">
+          <label>Subject Name</label>
+          <input type="text" id="subjectName" class="form-input" placeholder="e.g. Data Structures & Algorithms"
+            required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-glass" onclick="closeModal('subjectModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Subject</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Topic Modal -->
+    <div class="modal-content" id="topicModal" style="display: none;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-brain"></i> Add Study Topic</h3>
+        <button class="modal-close" onclick="closeModal('topicModal')">&times;</button>
+      </div>
+      <form onsubmit="handleTopicSubmit(event)">
+        <div class="form-group">
+          <label>Subject</label>
+          <select id="topicSubjectSelect" class="form-select" required>
+            <option value="">Loading subjects...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Topic Name</label>
+          <input type="text" id="topicName" class="form-input" placeholder="e.g. Dynamic Programming" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-glass" onclick="closeModal('topicModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Topic</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Practice Question Modal -->
+    <div class="modal-content" id="questionModal" style="display: none;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-plus"></i> Add Practice Question</h3>
+        <button class="modal-close" onclick="closeModal('questionModal')">&times;</button>
+      </div>
+      <form onsubmit="handleQuestionSubmit(event)">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="qCategory" class="form-select" required>
+            <option value="DSA">DSA</option>
+            <option value="SQL">SQL</option>
+            <option value="APTITUDE">Aptitude</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Question Title</label>
+          <input type="text" id="qTitle" class="form-input" placeholder="e.g. Two Sum Problem" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Difficulty</label>
+            <select id="qDifficulty" class="form-select" required>
+              <option value="EASY">Easy</option>
+              <option value="MEDIUM" selected>Medium</option>
+              <option value="HARD">Hard</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Source Link (Optional)</label>
+            <input type="url" id="qLink" class="form-input" placeholder="https://leetcode.com/...">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-glass" onclick="closeModal('questionModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Question</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Edit Quota Config Modal -->
+    <div class="modal-content" id="quotaModal" style="display: none;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-sliders"></i> Adjust Daily Targets</h3>
+        <button class="modal-close" onclick="closeModal('quotaModal')">&times;</button>
+      </div>
+      <form onsubmit="handleQuotaSubmit(event)">
+        <div class="form-group">
+          <label>DSA Questions / Day</label>
+          <input type="number" id="quotaDsaTarget" class="form-input" min="1" max="50" required>
+        </div>
+        <div class="form-group">
+          <label>SQL Queries / Day</label>
+          <input type="number" id="quotaSqlTarget" class="form-input" min="1" max="50" required>
+        </div>
+        <div class="form-group">
+          <label>Aptitude Problems / Day</label>
+          <input type="number" id="quotaAptTarget" class="form-input" min="1" max="50" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-glass" onclick="closeModal('quotaModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Targets</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Create Subject Modal -->
+    <div class="modal-content" id="createSubjectModal" style="display: none;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-folder-plus" style="color: #38BDF8;"></i> Create New Subject</h3>
+        <button class="modal-close" onclick="closeModal('createSubjectModal')">&times;</button>
+      </div>
+      <form onsubmit="handleStudyPlanSubjectCreate(event)">
+        <div class="form-group">
+          <label>Subject Name</label>
+          <input type="text" id="newSubjectNameInput" class="form-input"
+            placeholder="e.g. Operating Systems, Computer Networks, DBMS" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-glass" onclick="closeModal('createSubjectModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Create Subject</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Study Plan Add Question Modal -->
+    <div class="modal-content" id="studyPlanQuestionModal" style="display: none;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-circle-plus" style="color: #10B981;"></i> Add Subject Question</h3>
+        <button class="modal-close" onclick="closeModal('studyPlanQuestionModal')">&times;</button>
+      </div>
+      <form onsubmit="handleStudyPlanQuestionSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Subject</label>
+            <select id="spqSubjectSelect" class="form-select" required>
+              <option value="">Select Subject</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Topic Name</label>
+            <input type="text" id="spqTopicInput" class="form-input" placeholder="e.g. Deadlocks, Indexing" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="flex: 2;">
+            <label>Problem Short Description / Title</label>
+            <input type="text" id="spqTitleInput" class="form-input" placeholder="e.g. Banker's Algorithm, Two Sum"
+              required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Problem # (e.g. #175)</label>
+            <input type="text" id="spqNumInput" class="form-input" placeholder="#101">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Difficulty Level</label>
+            <select id="spqDifficultySelect" class="form-select" required>
+              <option value="EASY">Easy</option>
+              <option value="MEDIUM" selected>Medium</option>
+              <option value="HARD">Hard</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Progress Level / Status</label>
+            <select id="spqStatusSelect" class="form-select" required>
+              <option value="NOT_STARTED" selected>Not Started</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="SOLVED">Solved</option>
+              <option value="NEEDS_REVISION">Needs Revision</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Question Link (URL)</label>
+          <input type="url" id="spqLinkInput" class="form-input" placeholder="https://leetcode.com/problems/...">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-glass" onclick="closeModal('studyPlanQuestionModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Save Question</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 7-Column Excel Upload Modal -->
+    <div class="modal-content" id="subjectExcelModal" style="display: none; max-width: 600px;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-file-excel" style="color: #10B981;"></i> Upload 7-Column Excel Sheet</h3>
+        <button class="modal-close" onclick="closeModal('subjectExcelModal')">&times;</button>
+      </div>
+      <form onsubmit="handleSubjectExcelSubmit(event)">
+        <div class="excel-guide-banner">
+          <div class="guide-title"><i class="fa-solid fa-table-columns"></i> Expected 7-Column Excel Format:</div>
+          <div class="guide-columns">
+            <span class="col-pill">1. Subject</span>
+            <span class="col-pill">2. Topic</span>
+            <span class="col-pill">3. Title</span>
+            <span class="col-pill">4. Problem #</span>
+            <span class="col-pill">5. Difficulty</span>
+            <span class="col-pill">6. Status</span>
+            <span class="col-pill">7. URL Link</span>
+          </div>
+          <p class="guide-note">Supports both header auto-detection and positional columns. Blank status defaults to
+            "Not Started".</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+          <label>Target Subject (Optional - overrides Column 1)</label>
+          <select id="excelTargetSubjectSelect" class="form-select">
+            <option value="">Auto-Detect from Column 1 / File Name</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Select Spreadsheet File (.xlsx, .xls, .pdf)</label>
+          <input type="file" id="subjectExcelFileInput" class="form-input" accept=".xlsx, .xls, .pdf" required>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-glass" onclick="closeModal('subjectExcelModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Import &
+            Track</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+  <script src="app.js?v=2.3"></script>
+</body>
+
+</html>

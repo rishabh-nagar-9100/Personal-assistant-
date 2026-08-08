@@ -1,0 +1,40 @@
+# Environment & Secrets
+.env
+.env*.local
+*.pem
+*.key
+*.p12
+
+# Firebase Keys
+*firebase-adminsdk*.json
+*serviceAccountKey*.json
+
+# Java / Maven
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Frontend / Flutter / Node
+node_modules/
+frontend/build/
+frontend/.dart_tool/
+frontend/.pub/
+frontend/.pub-cache/
+
+# IDE & Editor
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thum.db
+
+# Logs & Temporary Files
+*.log
+scratch/
+.tempmediaStorage/
+.system_generated/
+
