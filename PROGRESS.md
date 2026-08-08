@@ -2,15 +2,18 @@
 
 > This file is the single source of truth for project state. Every agent session MUST read this file first, and MUST update it before ending any task or module. If this file is out of date, trust it less than the actual code — but always update it to match reality before stopping.
 
-Last updated: 2026-08-08 15:35 IST
+Last updated: 2026-08-08 23:00 IST
 
 ---
 
 ## Current Status
-- **Current module in progress:** ALL 14 MODULES COMPLETE & VERIFIED ✅
+- **Current module in progress:** ALL 14 MODULES COMPLETE, VERIFIED & CLOUD DEPLOYED ✅
 - **Current Status:**
-  - [x] **Render Free Tier Deployment Ready**: Multi-stage `Dockerfile`, `render.yaml` Blueprint, dynamic API URL discovery in `app.js`, and `${PORT:8080}` port binding created & verified.
-  - [x] **GitHub Sync**: Pushed to [https://github.com/rishabh-nagar-9100/Personal-assistant-.git](https://github.com/rishabh-nagar-9100/Personal-assistant-.git).
+  - [x] **Render Cloud Deployment Live**: Deployed on Render Free Tier:
+    - Frontend SPA: [https://jarvis-frontend-app.onrender.com](https://jarvis-frontend-app.onrender.com)
+    - Backend API: [https://jarvis-backend-service.onrender.com/health](https://jarvis-backend-service.onrender.com/health) (`{"status":"ok"}`)
+  - [x] **GitHub Repository**: Synchronized on branch `main` at [https://github.com/rishabh-nagar-9100/Personal-assistant-.git](https://github.com/rishabh-nagar-9100/Personal-assistant-.git).
+  - [x] **iPhone 12 & Laptop Responsive UI System**: Full mobile-first responsive architecture supporting dual viewports (iPhone 12 390x844 & Desktop 1280px-1920px). Features iOS safe area inset padding, `z-index: 10000` slide-out drawer, 2-tier question cards, 2x2 Day Order matrix, and swipeable chips/tabs.
   - [x] **5-Day Order College Timetable**: Full 5-day college schedule pre-seeded. Top banner prompt allows user to switch active Day Order (`DAY_1`–`DAY_5`, `HOLIDAY`).
   - [x] **Dynamic Study Allocation**: Removes exact college class hours and automatically packs overdue topic revisions (SM-2), practice questions (DSA, SQL, Aptitude), and tasks into remaining free windows.
   - [x] **Live Schedule & Interactive Task Tracking**: Live schedule displays colored course badges for college classes and interactive checkboxes for study tasks.
@@ -20,8 +23,10 @@ Last updated: 2026-08-08 15:35 IST
   - [x] **Flyway Migrations V1–V11**: Applied cleanly to Supabase PostgreSQL.
   - [x] **Test Suite**: **52/52 unit tests passing** (`mvn test` $\rightarrow$ `BUILD SUCCESS`).
 - **Running Servers:**
-  - Backend: `http://localhost:8080` (Spring Boot 3.3.5, Java 21)
-  - Web Dashboard: `http://localhost:3000` (Vanilla JS Dark Glassmorphism SPA)
+  - Production Frontend: `https://jarvis-frontend-app.onrender.com`
+  - Production Backend: `https://jarvis-backend-service.onrender.com`
+  - Local Backend: `http://localhost:8080` (Spring Boot 3.3.5, Java 21)
+  - Local Web Dashboard: `http://localhost:3000` (Vanilla JS Dark Glassmorphism SPA)
 
 ---
 
@@ -43,7 +48,7 @@ Last updated: 2026-08-08 15:35 IST
 | 11 - AI Chat Agent Backend | ✅ Done | 2026-08-08 | `ChatAgentService` (LLM intent parsing + deterministic fallback), `ChatAgentController` (POST /chat/message), `ChatRequest`/`ChatResponse` DTOs. Builds rich context from ALL backend services. |
 | 12 - Dashboard Metrics & Frontend Redesign | ✅ Done | 2026-08-08 | `DashboardService` + `DashboardController` (GET /dashboard/metrics). Dark glassmorphism AI dashboard with left sidebar, KPI cards, Live Schedule timeline, Study Plan progress bars, AI Briefing, and embedded AI Chat Assistant panel. |
 | 13 - Dynamic Subjects & 7-Col Excel Question Tracking | ✅ Done | 2026-08-08 | Flyway V10 migration. Dynamic Subject Tabs & Creation in Study Plan. 7-column Excel parser (`Subject`, `Topic`, `Title`, `Problem #`, `Difficulty`, `Status`, `URL`). Interactive Question Cards with problem badges and search filters. |
-| 14 - 5-Day Order Timetable & Task Notifications | ✅ Done | 2026-08-08 | Flyway V11 migration (`timetable_slots.day_order`, `user_daily_state`). 5-day college schedule seeding, daily Day Order switcher banner (`DAY_1`–`DAY_5`, `HOLIDAY`), class removal, free study packing, interactive completion checkboxes, and desktop task start notifications. |
+| 14 - 5-Day Order Timetable & Task Notifications | ✅ Done | 2026-08-08 | Flyway V11 migration (`timetable_slots.day_order`, `user_daily_state`). 5-day college schedule seeding, daily Day Order switcher banner (`DAY_1`–`DAY_5`, `HOLIDAY`), class removal, free study packing, interactive completion checkboxes, desktop task start notifications, Render cloud deployment, and dual iPhone 12 / laptop viewport responsive UI engine. |
 
 ---
 
@@ -61,6 +66,10 @@ Last updated: 2026-08-08 15:35 IST
   - Weekend / Holiday: 100% Free Study Day (14 hours free study blocks).
 - **Deterministic Scheduler Engine:** Implemented `SchedulerService` following ARCHITECTURE.md §6: 1) gather free slots for active Day Order, 2) priority event prep boost (60 min slots), 3) overdue revisions, 4) remaining quotas, 5) carry-over overflow packing. College classes are tagged `COLLEGE_CLASS` and sorted chronologically with study items.
 - **7-Column Excel Import Format:** Ingestion pipeline matches columns: `Subject`, `Topic`, `Problem Title`, `Problem #`, `Difficulty`, `Status`, `Question Link`.
+- **Render Cloud Architecture:** 
+  - Backend: Docker multi-stage Java 21 Web Service (`jarvis-backend-service`).
+  - Frontend: Vanilla JS CDN Static Site (`jarvis-frontend-app`).
+  - Dynamic API URL detection: Automatically resolves production URL vs local `http://localhost:8080`.
 
 ---
 
@@ -72,18 +81,17 @@ Last updated: 2026-08-08 15:35 IST
   - `SUPABASE_DB_PASSWORD` — Supabase DB password
   - `SUPABASE_JWT_SECRET` — Supabase JWT secret (Project Settings -> API -> JWT Secret)
   - `LLM_API_KEY` — Groq API key (optional, falls back to deterministic mode)
-- How to run locally: 
-  - Backend: `cd backend && mvn spring-boot:run` (port 8080)
-  - Frontend: `python3 -m http.server 3000 --directory frontend` (port 3000)
+- How to run: 
+  - Production Web App: `https://jarvis-frontend-app.onrender.com`
+  - Local Backend: `cd backend && mvn spring-boot:run` (port 8080)
+  - Local Frontend: `python3 -m http.server 3000 --directory frontend` (port 3000)
+  - Local Mobile Access: `http://172.20.10.6:3000`
   - Docker: `docker-compose up --build`
-- Backend port: 8080
-- Frontend port: 3000
 
 ---
 
 ## Next Action
-**ALL FEATURES COMPLETED & OPERATIONAL.** Open `http://localhost:3000` to interact with the full JARVIS assistant:
-- Top banner: select today's Day Order (`Day 1` to `Day 5` or `Holiday`).
-- Live Schedule: view college classes + study tasks, and check off study tasks to update completion progress in real time.
-- Study Plan: upload 7-column Excel sheets for any subject.
-- AI Assistant: chat with JARVIS for instant schedule summaries and recommendations.
+**ALL MODULES & DEPLOYMENTS ARE COMPLETED, VERIFIED & OPERATIONAL.**
+- Access Live Application: **[https://jarvis-frontend-app.onrender.com](https://jarvis-frontend-app.onrender.com)**
+- Access Local Application: **`http://localhost:3000`** or **`http://172.20.10.6:3000`**
+
