@@ -29,10 +29,9 @@ services:
   # --------------------------------------------------
   # Frontend Static Site (Vanilla JS Glassmorphism SPA)
   # --------------------------------------------------
-  - type: web
+  - type: static
     name: jarvis-frontend-app
-    env: static
-    plan: free
+    buildCommand: ""
     staticPublishPath: ./frontend
     routes:
       - type: rewrite
