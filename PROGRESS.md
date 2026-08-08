@@ -8,13 +8,15 @@ Last updated: 2026-08-08 15:35 IST
 
 ## Current Status
 - **Current module in progress:** ALL 14 MODULES COMPLETE & VERIFIED ✅
-- **Status:** 
-  - [x] **5-Day Order College Timetable**: Full 5-day college schedule pre-seeded (Courses: *Industrial cert.*, *Deep learning*, *Solar energy*, *SW measurements*, *Software V&V*, *Behavioral psych.*). Top banner prompt allows user to switch active Day Order (`DAY_1`–`DAY_5`, `HOLIDAY`).
-  - [x] **Dynamic Study Allocation**: Removes exact college class hours and automatically packs overdue topic revisions (SM-2), practice questions (DSA, SQL, Aptitude), and tasks into remaining free morning, afternoon, and evening windows.
-  - [x] **Live Schedule & Interactive Task Tracking**: Live schedule displays colored course badges for college classes and interactive checkboxes for study tasks. Checking off tasks directly marks them `SOLVED`/`DONE` and updates KPI progress bars live.
-  - [x] **Real-time Task Start Notifications**: Dispatches push alerts via FCM and browser desktop notifications (`Notification` API) with audio chime when study sessions start.
-  - [x] **Dynamic Subjects & 7-Column Excel Import**: Users can create subjects dynamically and upload 7-column Excel spreadsheets (`Subject`, `Topic`, `Problem Title`, `Problem #`, `Difficulty`, `Status`, `Question Link`).
-  - [x] **Conversational AI Chat Assistant & Daily Briefing**: Groq LLM integration (`llama-3.1-8b-instant`) with context aggregation from all modules and deterministic fallback.
+- **Current Status:**
+  - [x] **Render Free Tier Deployment Ready**: Multi-stage `Dockerfile`, `render.yaml` Blueprint, dynamic API URL discovery in `app.js`, and `${PORT:8080}` port binding created & verified.
+  - [x] **GitHub Sync**: Pushed to [https://github.com/rishabh-nagar-9100/Personal-assistant-.git](https://github.com/rishabh-nagar-9100/Personal-assistant-.git).
+  - [x] **5-Day Order College Timetable**: Full 5-day college schedule pre-seeded. Top banner prompt allows user to switch active Day Order (`DAY_1`–`DAY_5`, `HOLIDAY`).
+  - [x] **Dynamic Study Allocation**: Removes exact college class hours and automatically packs overdue topic revisions (SM-2), practice questions (DSA, SQL, Aptitude), and tasks into remaining free windows.
+  - [x] **Live Schedule & Interactive Task Tracking**: Live schedule displays colored course badges for college classes and interactive checkboxes for study tasks.
+  - [x] **Real-time Task Start Notifications**: Dispatches push alerts via FCM and browser desktop notifications with audio chime.
+  - [x] **Dynamic Subjects & 7-Column Excel Import**: 7-column Excel parser (`Subject`, `Topic`, `Problem Title`, `Problem #`, `Difficulty`, `Status`, `Question Link`).
+  - [x] **Conversational AI Chat Assistant & Daily Briefing**: Groq LLM integration with real-time context aggregation and deterministic fallback.
   - [x] **Flyway Migrations V1–V11**: Applied cleanly to Supabase PostgreSQL.
   - [x] **Test Suite**: **52/52 unit tests passing** (`mvn test` $\rightarrow$ `BUILD SUCCESS`).
 - **Running Servers:**
