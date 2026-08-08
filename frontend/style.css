@@ -1970,18 +1970,19 @@ body.sidebar-open .sidebar-overlay {
     gap: 12px;
     padding: 14px;
   }
-  .dayorder-buttons {
-    display: flex;
-    flex-wrap: wrap;
+  .dayorder-pills {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     width: 100%;
   }
   .dayorder-btn {
-    flex: 1 1 calc(33.33% - 6px);
-    min-width: 70px;
+    width: 100%;
     text-align: center;
-    padding: 6px 10px;
+    padding: 6px 4px;
     font-size: 0.75rem;
+    white-space: nowrap;
+    justify-content: center;
   }
   
   /* Horizontal swipeable prompt chips on mobile */
@@ -2039,21 +2040,87 @@ body.sidebar-open .sidebar-overlay {
   }
 }
 
-@media (max-width: 480px) {
+/* ═══════════════════════════════════════════
+   iPhone 12 / 13 / 14 & Narrow Phone Specifics (<= 430px)
+   Viewport: 390px x 844px (DPR 3.0)
+   ═══════════════════════════════════════════ */
+@media (max-width: 430px) {
+  .main-wrapper {
+    padding: 12px 10px max(20px, env(safe-area-inset-bottom)) 10px;
+  }
+
+  /* KPI Metrics 2x2 Grid on iPhone 12 */
   .kpi-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
   .kpi-card {
-    padding: 14px;
+    padding: 10px 12px;
+    gap: 6px;
   }
-  .kpi-val {
-    font-size: 1.4rem;
+  .kpi-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+  .kpi-value {
+    font-size: 1.2rem;
+  }
+  .kpi-label {
+    font-size: 0.68rem;
+  }
+
+  /* Day Order Pills 3x2 Grid */
+  .dayorder-pills {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
   }
   .dayorder-btn {
-    flex: 1 1 calc(50% - 6px);
+    padding: 6px 4px;
+    font-size: 0.7rem;
   }
+
+  /* Schedule timeline item alignment */
+  .schedule-item {
+    padding: 10px;
+    gap: 8px;
+  }
+  .schedule-time {
+    font-size: 0.75rem;
+  }
+  .schedule-title {
+    font-size: 0.85rem;
+  }
+
+  /* AI Chat Box */
   .chat-container {
-    height: 400px;
+    height: 380px;
+  }
+  .chat-messages {
+    padding: 10px;
+  }
+  .chat-bubble {
+    max-width: 90%;
+    font-size: 0.85rem;
+  }
+  .chat-input-container {
+    padding: 6px 8px;
+  }
+  .chat-input {
+    font-size: 0.82rem;
+    padding: 8px 10px;
+  }
+  .chat-send-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Question Cards & Modals */
+  .question-card {
+    padding: 10px 12px;
+  }
+  .question-title {
+    font-size: 0.88rem;
   }
 }
